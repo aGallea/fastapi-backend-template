@@ -5,7 +5,7 @@ default_stages:
 - pre-commit
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v4.6.0
+  rev: v6.0.0
   hooks:
   - id: check-added-large-files
     exclude: .?.json
@@ -44,14 +44,14 @@ repos:
   hooks:
   - id: yamlfix
 - repo: https://github.com/adrienverge/yamllint
-  rev: v1.35.1
+  rev: v1.37.1
   hooks:
   - id: yamllint
     name: Lint YAML files
     args:
     - --strict
 - repo: https://github.com/sirosen/check-jsonschema
-  rev: 0.28.4
+  rev: 0.35.0
   hooks:
   - id: check-jsonschema
     name: Validate GitHub Workflows
@@ -122,14 +122,20 @@ repos:
     - --schemafile
     - https://docs.renovatebot.com/renovate-schema.json
 - repo: https://github.com/commitizen-tools/commitizen
-  rev: v3.27.0
+  rev: v4.10.0
   hooks:
   - id: commitizen
     name: Lint commit message
     stages:
     - commit-msg
+- repo: https://github.com/astral-sh/ruff-pre-commit
+  rev: v0.14.7
+  hooks:
+  - id: ruff
+    args:
+    - --fix
 - repo: https://github.com/pycqa/isort
-  rev: 5.13.2
+  rev: 7.0.0
   hooks:
   - id: isort
     name: isort (python)
@@ -138,13 +144,13 @@ repos:
     - black
     - --filter-files
 - repo: https://github.com/psf/black
-  rev: 24.4.2
+  rev: 25.11.0
   hooks:
   - id: black
     args:
     - my_app
 - repo: https://github.com/shellcheck-py/shellcheck-py
-  rev: v0.10.0.1
+  rev: v0.11.0.1
   hooks:
   - id: shellcheck
     name: Check sh files (and patch)
@@ -162,7 +168,7 @@ repos:
   - id: shfmt
     name: Format sh files
     language: docker_image
-    entry: mvdan/shfmt:v3.4.1
+    entry: mvdan/shfmt:v3.12.0
     args:
     - -w
     - -s
@@ -182,7 +188,7 @@ repos:
   - id: hadolint
     name: Lint Dockerfiles
     language: docker_image
-    entry: hadolint/hadolint:v2.12.0 hadolint
+    entry: hadolint/hadolint:v2.14.0 hadolint
     types:
     - dockerfile
   - id: gitleaks
@@ -211,7 +217,7 @@ repos:
     pass_filenames: false
     require_serial: true
 - repo: https://github.com/pre-commit/mirrors-mypy
-  rev: v1.10.0
+  rev: v1.19.0
   hooks:
   - id: mypy
     verbose: true
@@ -223,3 +229,8 @@ repos:
     - --no-strict-optional
     - --ignore-missing-imports
     - --check-untyped-defs
+    additional_dependencies:
+    - pytest
+    - fastapi
+    - httpx
+    - pydantic-settings

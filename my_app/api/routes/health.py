@@ -5,7 +5,7 @@ from my_app.models import ReturnHealthcheckStruct
 router = APIRouter(prefix="/healthcheck", tags=["healthcheck"])
 
 
-@router.get(  # type: ignore[misc]
+@router.get(
     "/liveness",
     tags=["healthcheck"],
     summary="Perform a Liveness Health Check",
@@ -17,7 +17,7 @@ async def liveness() -> ReturnHealthcheckStruct:
     return {"status": "success"}
 
 
-@router.get(  # type: ignore[misc]
+@router.get(
     "/readiness",
     tags=["healthcheck"],
     summary="Perform a Readiness Health Check",
