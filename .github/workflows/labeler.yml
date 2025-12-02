@@ -16,6 +16,10 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v6
+      with:
+        ref: ${{ github.event.pull_request.head.sha }}
+        repository: ${{ github.event.pull_request.head.repo.full_name }}
     - uses: actions/labeler@v6
       if: ${{ github.event.action != 'labeled' && github.event.action != 'unlabeled' }}
     - run: echo "Done adding labels"
