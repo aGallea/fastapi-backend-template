@@ -30,7 +30,7 @@ jobs:
       run: uv run pytest
     - name: Coverage Report
       if: always()
-      uses: aGallea/tests-coverage-report@8d74d192599c6d5eb2e937b1eafe6cef1ec147c3
+      uses: aGallea/tests-coverage-report@21332df54a69ebdd7f80d1496f30a1398e94da09
       with:
         min-coverage-percentage: '90'
         fail-under-coverage-percentage: 'false'
