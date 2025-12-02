@@ -1,3 +1,17 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json"
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base"
+  ],
+  "prHourlyLimit": 0,
+  "prConcurrentLimit": 0,
+  "pre-commit": {
+    "enabled": true
+  },
+  "github-actions": {
+    "enabled": true
+  },
+  "uv": {
+    "enabled": true
+  }
 }
