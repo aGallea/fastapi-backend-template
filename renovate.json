@@ -4,14 +4,5 @@
     "config:base"
   ],
   "prHourlyLimit": 0,
-  "prConcurrentLimit": 0,
-  "pre-commit": {
-    "enabled": true
-  },
-  "github-actions": {
-    "enabled": true
-  },
-  "uv": {
-    "enabled": true
-  }
+  "prConcurrentLimit": 0
 }
