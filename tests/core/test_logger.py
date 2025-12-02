@@ -1,6 +1,31 @@
 import logging
+from unittest.mock import MagicMock, patch
 
-from my_app.core.logger import Formatter
+from my_app.core.logger import Formatter, init_logger
+
+
+@patch("my_app.core.logger.logging")
+def test_init_logger(mock_logging: MagicMock) -> None:
+    # Setup mocks
+    mock_root = MagicMock()
+    mock_logging.root = mock_root
+    mock_handler = MagicMock()
+    mock_logging.StreamHandler.return_value = mock_handler
+
+    # Call the function
+    init_logger()
+
+    # Assertions
+    mock_logging.StreamHandler.assert_called_once()
+    mock_handler.setFormatter.assert_called_once()
+    mock_root.addHandler.assert_called_with(mock_handler)
+    mock_root.setLevel.assert_called()
+
+    # Check if other loggers levels were set
+    mock_logging.getLogger.assert_any_call("asyncio")
+    mock_logging.getLogger.assert_any_call("fastapi")
+    mock_logging.getLogger.assert_any_call("httpx")
+    mock_logging.getLogger.assert_any_call("httpcore")
 
 
 def test_formatter_get_level_color() -> None:
