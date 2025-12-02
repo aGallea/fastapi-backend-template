@@ -1,0 +1,15 @@
+{
+  "configurations": [
+    {
+      "name": "Server",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "my_app",
+      "env": {
+        "LOG_SEVERITY": "INFO"
+      },
+      "console": "integratedTerminal",
+      "justMyCode": false
+    }
+  ]
+}

@@ -1,0 +1,236 @@
+---
+minimum_pre_commit_version: 4.5.0
+fail_fast: false
+default_stages:
+- pre-commit
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v6.0.0
+  hooks:
+  - id: check-added-large-files
+    exclude: .?.json
+  - id: check-case-conflict
+  - id: check-executables-have-shebangs
+  - id: check-shebang-scripts-are-executable
+  - id: check-merge-conflict
+  - id: check-symlinks
+  - id: detect-private-key
+    exclude: .gitleaks.toml
+  - id: no-commit-to-branch
+  - id: trailing-whitespace
+  - id: end-of-file-fixer
+  - id: mixed-line-ending
+  - id: check-json
+  - id: check-toml
+  - id: check-xml
+  - id: pretty-format-json
+    args:
+    - --autofix
+    - --no-sort-keys
+- repo: https://github.com/myint/autoflake
+  rev: v2.3.1
+  hooks:
+  - id: autoflake
+    args:
+    - --in-place
+    - --remove-all-unused-imports
+- repo: https://github.com/jumanjihouse/pre-commit-hooks
+  rev: 3.0.0
+  hooks:
+  - id: forbid-binary
+    exclude: .?.ttf
+- repo: https://github.com/lyz-code/yamlfix
+  rev: 1.19.0
+  hooks:
+  - id: yamlfix
+- repo: https://github.com/adrienverge/yamllint
+  rev: v1.37.1
+  hooks:
+  - id: yamllint
+    name: Lint YAML files
+    args:
+    - --strict
+- repo: https://github.com/sirosen/check-jsonschema
+  rev: 0.35.0
+  hooks:
+  - id: check-jsonschema
+    name: Validate GitHub Workflows
+    files: ^\.github/workflows/.*\.yml
+    types:
+    - yaml
+    args:
+    - --schemafile
+    - https://json.schemastore.org/github-workflow.json
+  - id: check-jsonschema
+    name: Validate GitHub Actions
+    files: >
+      (?x)^(
+        .*/action\.(yml|yaml)|
+        \.github/actions/.*
+      )$
+    types:
+    - yaml
+    args:
+    - --schemafile
+    - https://json.schemastore.org/github-action
+  - id: check-jsonschema
+    name: Validate DependaBot
+    files: ^\.github/dependabot\.yml
+    types:
+    - yaml
+    args:
+    - --schemafile
+    - https://json.schemastore.org/dependabot-2.0.json
+  - id: check-jsonschema
+    name: Validate MarkdownLint
+    files: .*\.markdownlint\.yaml
+    types:
+    - yaml
+    args:
+    - --schemafile
+    - https://json.schemastore.org/markdownlint.json
+  - id: check-jsonschema
+    name: Validate YamlLint
+    files: .*\.yamllint\.yaml
+    types:
+    - yaml
+    args:
+    - --schemafile
+    - https://json.schemastore.org/yamllint.json
+  - id: check-jsonschema
+    name: Validate Pre-commit
+    files: .*\.pre-commit-config\.yaml
+    types:
+    - yaml
+    args:
+    - --schemafile
+    - https://json.schemastore.org/pre-commit-config.json
+  - id: check-jsonschema
+    name: Validate Docker-Compose
+    files: ^docker-compose\.yml$
+    types:
+    - yaml
+    args:
+    - --schemafile
+    - https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json
+  - id: check-jsonschema
+    name: Validate Renovate
+    files: ^\.github/renovate\.json
+    types:
+    - json
+    args:
+    - --schemafile
+    - https://docs.renovatebot.com/renovate-schema.json
+- repo: https://github.com/commitizen-tools/commitizen
+  rev: v4.10.0
+  hooks:
+  - id: commitizen
+    name: Lint commit message
+    stages:
+    - commit-msg
+- repo: https://github.com/astral-sh/ruff-pre-commit
+  rev: v0.14.7
+  hooks:
+  - id: ruff
+    args:
+    - --fix
+- repo: https://github.com/pycqa/isort
+  rev: 7.0.0
+  hooks:
+  - id: isort
+    name: isort (python)
+    args:
+    - --profile
+    - black
+    - --filter-files
+- repo: https://github.com/psf/black
+  rev: 25.11.0
+  hooks:
+  - id: black
+    args:
+    - my_app
+- repo: https://github.com/shellcheck-py/shellcheck-py
+  rev: v0.11.0.1
+  hooks:
+  - id: shellcheck
+    name: Check sh files (and patch)
+    entry: bash -eo pipefail -c 'shellcheck $@ -f diff | patch -p 1' --
+  - id: shellcheck
+    name: Check sh files (and print violations)
+- repo: local
+  hooks:
+  - id: list-files
+    name: List files
+    language: system
+    entry: bash -c 'echo $@'
+    stages:
+    - manual
+  - id: shfmt
+    name: Format sh files
+    language: docker_image
+    entry: mvdan/shfmt:v3.12.0
+    args:
+    - -w
+    - -s
+    - -i
+    - '2'
+    types:
+    - shell
+  - id: markdownlint
+    name: Lint Markdown files
+    language: docker_image
+    entry: 06kellyjac/markdownlint-cli:0.28.1
+    args:
+    - --fix
+    types:
+    - markdown
+    exclude: CHANGELOG.md
+  - id: hadolint
+    name: Lint Dockerfiles
+    language: docker_image
+    entry: hadolint/hadolint:v2.14.0 hadolint
+    types:
+    - dockerfile
+  - id: gitleaks
+    name: Protect hardcoded secrets
+    language: docker_image
+    entry: docker.io/zricethezav/gitleaks:v8.28.0@sha256:cdbb7c955abce02001a9f6c9f602fb195b7fadc1e812065883f695d1eeaba854
+    args:
+    - protect
+    - --staged
+    - --redact
+    - --verbose
+    pass_filenames: false
+    require_serial: true
+  - id: gitleaks-ci
+    name: Detect hardcoded secrets
+    language: docker_image
+    entry: docker.io/zricethezav/gitleaks:v8.28.0@sha256:cdbb7c955abce02001a9f6c9f602fb195b7fadc1e812065883f695d1eeaba854
+    stages:
+    - manual
+    args:
+    - detect
+    - --redact
+    - --verbose
+    - --log-opts
+    - --left-right --cherry-pick --pretty=format:"%H" remotes/origin/master...
+    pass_filenames: false
+    require_serial: true
+- repo: https://github.com/pre-commit/mirrors-mypy
+  rev: v1.19.0
+  hooks:
+  - id: mypy
+    verbose: true
+    args:
+    - --config-file
+    - pyproject.toml
+    - --install-types
+    - --non-interactive
+    - --no-strict-optional
+    - --ignore-missing-imports
+    - --check-untyped-defs
+    additional_dependencies:
+    - pytest
+    - fastapi
+    - httpx
+    - pydantic-settings
