@@ -1,0 +1,33 @@
+---
+name: Python Semantic Release
+on:
+  push:
+    branches:
+    - master
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-24.04
+    permissions:
+      id-token: write
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+    - uses: actions/setup-python@v6
+      with:
+        python-version: '3.13'
+    - name: Run Python Semantic Release
+      run: |
+        pip install "python-semantic-release[build]"
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        semantic-release version
+      env:
+        GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        GH_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
