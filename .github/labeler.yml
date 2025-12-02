@@ -1,0 +1,7 @@
+---
+documentation:
+- '**/*.md'
+backend:
+- app/**
+tests:
+- tests/**
