@@ -18,6 +18,6 @@ jobs:
     - name: Install uv
       uses: astral-sh/setup-uv@v7
       with:
-        version: 0.10.2
+        version: 0.12.13
         enable-cache: true
     - run: uv run ruff check
